@@ -1,0 +1,7 @@
+Package: com.youtubeplus
+Name: YouTube Plus
+Depends: mobilesubstrate
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: An all-in-one YouTube enhancer tweak
+Section: Tweaks
