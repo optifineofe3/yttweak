@@ -14,7 +14,7 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = YouTubePlus
 $(TWEAK_NAME)_FRAMEWORKS = UIKit Foundation SystemConfiguration Photos Security QuartzCore
-$(TWEAK_NAME)_CFLAGS = -fobjc-arc -DTWEAK_VERSION=$(PACKAGE_VERSION) -IYTHeader -I. -Wno-deprecated-declarations -Wno-unused-function
+$(TWEAK_NAME)_CFLAGS = -fobjc-arc -DTWEAK_VERSION=$(PACKAGE_VERSION) -IYTHeader -I. -Wno-deprecated-declarations -Wno-unused-function -Wno-misleading-indentation -Wno-error
 $(TWEAK_NAME)_FILES = $(wildcard *.x Utils/*.m)
 
 include $(THEOS_MAKE_PATH)/tweak.mk

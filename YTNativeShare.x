@@ -5,10 +5,6 @@
 #import "YTHeader/GPBUnknownField.h"
 #import "YTHeader/GPBUnknownFieldSet.h"
 
-@interface CustomGPBMessage : GPBMessage
-+ (instancetype)deserializeFromString:(NSString *)string;
-@end
-
 @interface YTICommand : GPBMessage
 @end
 
@@ -20,13 +16,13 @@
 @property (nonatomic, assign, readwrite) BOOL hasOnAppear;
 @end
 
-@interface YTIUpdateShareSheetCommand
+@interface YTIUpdateShareSheetCommand : GPBMessage
 @property (nonatomic, assign, readwrite) BOOL hasSerializedShareEntity;
 @property (nonatomic, copy, readwrite) NSString *serializedShareEntity;
 + (GPBExtensionDescriptor*)updateShareSheetCommand;
 @end
 
-@interface YTIInnertubeCommandExtensionRoot
+@interface YTIInnertubeCommandExtensionRoot : NSObject
 + (GPBExtensionDescriptor*)innertubeCommand;
 @end
 

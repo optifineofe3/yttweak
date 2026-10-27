@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
+#import <Security/Security.h>
 #import <dlfcn.h>
 
 #define YT_BUNDLE_ID @"com.google.ios.youtube"
@@ -19,10 +20,11 @@ static NSString *accessGroupID() {
                            nil];
     CFDictionaryRef result = nil;
     OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
-    if (status == errSecItemNotFound)
+    if (status == errSecItemNotFound) {
         status = SecItemAdd((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
         if (status != errSecSuccess)
             return nil;
+    }
     NSString *accessGroup = [(__bridge NSDictionary *)result objectForKey:(__bridge NSString *)kSecAttrAccessGroup];
 
     return accessGroup;

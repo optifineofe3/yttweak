@@ -227,8 +227,7 @@
 @interface YTReelPlayerButton : YTQTMButton
 @end
 
-@interface ELMCellNode
-@end
+@class ELMCellNode;
 
 @interface _ASCollectionViewCell : UICollectionViewCell
 - (id)node;

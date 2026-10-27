@@ -1210,7 +1210,7 @@ static void genImageFromLayer(CALayer *layer, UIColor *backgroundColor, void (^c
 %end
 
 // Startup Tab
-BOOL isTabSelected = NO;
+static BOOL isTabSelected = NO;
 %hook YTPivotBarViewController
 - (void)viewDidAppear:(BOOL)animated {
     %orig;
@@ -1297,7 +1297,7 @@ BOOL isTabSelected = NO;
 }
 %end
 
-CGFloat rateBeforeSpeedmaster = 1.0;
+static CGFloat rateBeforeSpeedmaster = 1.0;
 
 static void manageSpeedmasterYouTubePlus(UILongPressGestureRecognizer *gesture, YTMainAppVideoPlayerOverlayViewController *delegate, YTInlinePlayerScrubUserEducationView *edu) {
     NSArray *speedLabels = @[@0, @2.0, @0.25, @0.5, @0.75, @1.0, @1.25, @1.5, @1.75, @2.0, @3.0, @4.0, @5.0];
