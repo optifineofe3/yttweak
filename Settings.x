@@ -88,16 +88,38 @@ static NSString *GetCacheSize() {
 %end
 
 %hook YTSettingsCell
+- (void)setIndicatorIcon:(int)icon {
+    if ([self.accessibilityIdentifier isEqualToString:@"YouTubePlusSectionItem"]) {
+        %orig(0);
+        return;
+    }
+    %orig(icon);
+}
+
+- (void)setDetailText:(id)arg1 {
+    if ([self.accessibilityIdentifier isEqualToString:@"YouTubePlusSectionItem"]) {
+        if ([arg1 isKindOfClass:[NSString class]] && [arg1 isEqualToString:@"‣"]) {
+            %orig(nil);
+            return;
+        }
+    }
+    %orig(arg1);
+}
+
 - (void)layoutSubviews {
     %orig;
 
     if ([self.accessibilityIdentifier isEqualToString:@"YouTubePlusSectionItem"]) {
-        @try {
-            YTTouchFeedbackController *feedback = [self valueForKey:@"_touchFeedbackController"];
-            ABCSwitch *abcSwitch = [self valueForKey:@"_switch"];
-            feedback.feedbackColor = [UIColor colorWithRed:0.75 green:0.50 blue:0.90 alpha:1.0];
-            abcSwitch.onTintColor = [UIColor colorWithRed:0.75 green:0.50 blue:0.90 alpha:1.0];
-        } @catch (NSException *e) {}
+        NSArray *indicatorKeys = @[@"_navigationChevronImageView", @"_navigationChevron", @"_indicatorImageView", @"_indicatorIcon"];
+        for (NSString *key in indicatorKeys) {
+            @try {
+                UIView *view = [self valueForKey:key];
+                if (view && [view isKindOfClass:[UIView class]]) {
+                    view.hidden = YES;
+                    view.alpha = 0.0;
+                }
+            } @catch (NSException *e) {}
+        }
     }
 }
 %end
@@ -171,9 +193,7 @@ static NSString *GetCacheSize() {
 
     YTSettingsSectionItem *general = [YTSettingsSectionItemClass itemWithTitle:LOC(@"General")
         accessibilityIdentifier:@"YouTubePlusSectionItem"
-        detailTextBlock:^NSString *() {
-            return @"‣";
-        }
+        detailTextBlock:nil
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
             NSArray <YTSettingsSectionItem *> *rows = @[
             [self switchWithTitle:@"RemoveAds" key:@"noAds"],
@@ -189,9 +209,7 @@ static NSString *GetCacheSize() {
 
     YTSettingsSectionItem *navbar = [YTSettingsSectionItemClass itemWithTitle:LOC(@"Navbar")
     accessibilityIdentifier:@"YouTubePlusSectionItem"
-    detailTextBlock:^NSString *() {
-        return @"‣";
-    }
+    detailTextBlock:nil
     selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
         NSArray <YTSettingsSectionItem *> *rows = @[
             [self switchWithTitle:@"RemoveCast" key:@"noCast"],
@@ -219,9 +237,7 @@ static NSString *GetCacheSize() {
     if (ytlBool(@"advancedMode")) {
         YTSettingsSectionItem *overlay = [YTSettingsSectionItemClass itemWithTitle:LOC(@"Overlay")
         accessibilityIdentifier:@"YouTubePlusSectionItem"
-        detailTextBlock:^NSString *() {
-            return @"‣";
-        }
+        detailTextBlock:nil
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
             NSArray <YTSettingsSectionItem *> *rows = @[
                 [self switchWithTitle:@"HideAutoplay" key:@"hideAutoplay"],
@@ -250,9 +266,7 @@ static NSString *GetCacheSize() {
 
         YTSettingsSectionItem *player = [YTSettingsSectionItemClass itemWithTitle:LOC(@"Player")
         accessibilityIdentifier:@"YouTubePlusSectionItem"
-        detailTextBlock:^NSString *() {
-            return @"‣";
-        }
+        detailTextBlock:nil
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
             NSArray <YTSettingsSectionItem *> *rows = @[
                 [self switchWithTitle:@"Miniplayer" key:@"miniplayer"],
@@ -286,9 +300,7 @@ static NSString *GetCacheSize() {
 
         YTSettingsSectionItem *shorts = [YTSettingsSectionItemClass itemWithTitle:LOC(@"Shorts")
         accessibilityIdentifier:@"YouTubePlusSectionItem"
-        detailTextBlock:^NSString *() {
-            return @"‣";
-        }
+        detailTextBlock:nil
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
             NSArray <YTSettingsSectionItem *> *rows = @[
                 [self switchWithTitle:@"ShortsOnlyMode" key:@"shortsOnlyMode"],
@@ -327,9 +339,7 @@ static NSString *GetCacheSize() {
 
     YTSettingsSectionItem *tabbar = [YTSettingsSectionItemClass itemWithTitle:LOC(@"Tabbar")
     accessibilityIdentifier:@"YouTubePlusSectionItem"
-    detailTextBlock:^NSString *() {
-        return @"‣";
-    }
+    detailTextBlock:nil
     selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
         NSArray <YTSettingsSectionItem *> *rows = @[
             [self switchWithTitle:@"RemoveLabels" key:@"removeLabels"],
@@ -352,9 +362,7 @@ static NSString *GetCacheSize() {
     if (ytlBool(@"advancedMode")) {
         YTSettingsSectionItem *other = [YTSettingsSectionItemClass itemWithTitle:LOC(@"Other")
         accessibilityIdentifier:@"YouTubePlusSectionItem"
-        detailTextBlock:^NSString *() {
-            return @"‣";
-        }
+        detailTextBlock:nil
         selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
             NSArray <YTSettingsSectionItem *> *rows = @[
                 [self switchWithTitle:@"CopyVideoInfo" key:@"copyVideoInfo"],
@@ -588,13 +596,8 @@ static NSString *GetCacheSize() {
     [sectionItems addObject:version];
 
     BOOL isNew = [settingsViewController respondsToSelector:@selector(setSectionItems:forCategory:title:icon:titleDescription:headerHidden:)];
-    if (isNew) {
-        YTIIcon *icon = [%c(YTIIcon) new];
-        icon.iconType = (YTIcon)44;
-        [settingsViewController setSectionItems:sectionItems forCategory:YouTubePlusSection title:@"YouTube Plus" icon:icon titleDescription:nil headerHidden:NO];
-    } else {
-        [settingsViewController setSectionItems:sectionItems forCategory:YouTubePlusSection title:@"YouTube Plus" titleDescription:nil headerHidden:NO];
-    }
+    isNew ? [settingsViewController setSectionItems:sectionItems forCategory:YouTubePlusSection title:@"YouTube Plus" icon:nil titleDescription:nil headerHidden:NO]
+          : [settingsViewController setSectionItems:sectionItems forCategory:YouTubePlusSection title:@"YouTube Plus" titleDescription:nil headerHidden:NO];
 
 }
 
