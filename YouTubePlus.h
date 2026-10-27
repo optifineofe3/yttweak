@@ -8,6 +8,11 @@
 
 #define LOC(key) [NSBundle.ytp_defaultBundle localizedStringForKey:key value:nil table:nil]
 
+#ifndef OS_STRINGIFY
+#define __OS_STRINGIFY(s) #s
+#define OS_STRINGIFY(s) __OS_STRINGIFY(s)
+#endif
+
 #define ytlBool(key) [[YTLUserDefaults standardUserDefaults] boolForKey:key]
 #define ytlInt(key) [[YTLUserDefaults standardUserDefaults] integerForKey:key]
 

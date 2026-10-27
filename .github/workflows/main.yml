@@ -301,7 +301,10 @@ jobs:
 
       - name: Inject tweaks into IPA
         run: |
-          tweaks="ytplus.deb OpenYoutubeSafariExtension.appex"
+          tweaks="ytplus.deb"
+          if [ -e "OpenYoutubeSafariExtension.appex" ]; then
+            tweaks="$tweaks OpenYoutubeSafariExtension.appex"
+          fi
 
           for f in *.deb; do
             if [ -f "$f" ] && [ "$f" != "ytplus.deb" ]; then
