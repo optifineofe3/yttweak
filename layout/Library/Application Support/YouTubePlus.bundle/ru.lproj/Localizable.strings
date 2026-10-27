@@ -1,4 +1,4 @@
-﻿/* Main section */
+/* Main section */
 "Main" = "Основные";
 
 /* Downloading options */
@@ -335,8 +335,10 @@
 
 /* Interface options */
 "Interface" = "Интерфейс";
-"OledTheme" = "Oled режим";
-"OledThemeDesc" = "Заменяет темные цвета черным";
+"OledTheme" = "OLED тема";
+"OledThemeDesc" = "Заменяет темные цвета на чисто черный";
+"OLEDTheme" = "OLED тема";
+"OLEDThemeDesc" = "Заменяет темные цвета на чисто черный";
 "OledKeyboard" = "Oled клавиатура";
 "OledKeyboardDesc" = "Применяет черную тему для темной клавиатуры";
 "NoSearchHistory" = "Скрыть историю поиска";

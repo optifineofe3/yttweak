@@ -19,6 +19,7 @@
 #import "YTHeader/YTIMenuConditionalServiceItemRenderer.h"
 #import "YTHeader/YTToastResponderEvent.h"
 #import "YTHeader/YTPageStyleController.h"
+#import "YTHeader/YTColorPalette.h"
 #import "YTHeader/ASCollectionElement.h"
 #import "YTHeader/ASCollectionView.h"
 #import "YTHeader/ELMNodeController.h"

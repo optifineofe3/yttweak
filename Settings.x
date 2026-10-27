@@ -207,6 +207,21 @@ static NSString *GetCacheSize() {
 
     [sectionItems addObject:general];
 
+    YTSettingsSectionItem *interface = [YTSettingsSectionItemClass itemWithTitle:LOC(@"Interface")
+        accessibilityIdentifier:@"YouTubePlusSectionItem"
+        detailTextBlock:nil
+        selectBlock:^BOOL (YTSettingsCell *cell, NSUInteger arg1) {
+            NSArray <YTSettingsSectionItem *> *rows = @[
+                [self switchWithTitle:@"OledTheme" key:@"oledTheme"]
+            ];
+
+            YTSettingsPickerViewController *picker = [[%c(YTSettingsPickerViewController) alloc] initWithNavTitle:LOC(@"Interface") pickerSectionTitle:nil rows:rows selectedItemIndex:NSNotFound parentResponder:[self parentResponder]];
+            [settingsViewController pushViewController:picker];
+            return YES;
+        }];
+
+    [sectionItems addObject:interface];
+
     YTSettingsSectionItem *navbar = [YTSettingsSectionItemClass itemWithTitle:LOC(@"Navbar")
     accessibilityIdentifier:@"YouTubePlusSectionItem"
     detailTextBlock:nil

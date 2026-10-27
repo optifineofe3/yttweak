@@ -1373,6 +1373,34 @@ static NSURL *newCoverURL(NSURL *originalURL) {
 }
 %end
 
+// OLED Theme
+%hook YTCommonColorPalette
+- (UIColor *)background1 { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)background2 { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)background3 { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)brandBackgroundSolid { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)brandBackgroundPrimary { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)brandBackgroundSecondary { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)generalBackgroundA { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)generalBackgroundB { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)generalBackgroundC { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)baseBackground { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)raisedBackground { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)menuBackground { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+%end
+
+%hook YTColorPalette
+- (UIColor *)background1 { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)background2 { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)background3 { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)brandBackgroundSolid { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)brandBackgroundPrimary { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)brandBackgroundSecondary { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)generalBackgroundA { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)generalBackgroundB { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+- (UIColor *)generalBackgroundC { return (self.pageStyle == 1 && ytlBool(@"oledTheme")) ? [UIColor blackColor] : %orig; }
+%end
+
 // %hook ELMImageDownloader
 // - (id)downloadImageWithURL:(id)arg1 targetSize:(CGSize)arg2 callbackQueue:(id)arg3 downloadProgress:(id)arg4 completion:(id)arg5 {
 //     return %orig(newCoverURL(arg1), arg2, arg3, arg4, arg5);
