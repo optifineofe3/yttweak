@@ -13,4 +13,5 @@
 - (NSArray <NSNumber *> *)privacyCategories;
 - (NSArray <NSNumber *> *)miscellaneousCategories;
 - (NSArray <NSNumber *> *)developmentCategories;
++ (NSMutableArray <NSNumber *> *)tweaks;
 @end

@@ -35,6 +35,52 @@ static NSString *GetCacheSize() {
 }
 %end
 
+%hook YTSettingsGroupData
++ (NSMutableArray <NSNumber *> *)tweaks {
+    Class groupClass = objc_getClass("YTSettingsGroupData");
+    if (class_getClassMethod(groupClass, @selector(tweaks))) {
+        NSMutableArray <NSNumber *> *tweaks = %orig;
+        if (tweaks && ![tweaks containsObject:@(YouTubePlusSection)]) {
+            [tweaks insertObject:@(YouTubePlusSection) atIndex:0];
+        }
+        return tweaks;
+    }
+    return [NSMutableArray arrayWithObject:@(YouTubePlusSection)];
+}
+
+- (NSArray <NSNumber *> *)orderedCategories {
+    NSArray <NSNumber *> *categories = %orig;
+    if (self.type == 1) {
+        NSMutableArray *mutableCategories = categories.mutableCopy;
+        if (![mutableCategories containsObject:@(YouTubePlusSection)]) {
+            NSUInteger insertIndex = [mutableCategories indexOfObject:@(1)];
+            if (insertIndex != NSNotFound)
+                [mutableCategories insertObject:@(YouTubePlusSection) atIndex:insertIndex + 1];
+            else
+                [mutableCategories insertObject:@(YouTubePlusSection) atIndex:0];
+        }
+        return mutableCategories.copy;
+    }
+    return categories;
+}
+
+- (NSArray <NSNumber *> *)orderedCategoriesForGroupType:(NSUInteger)groupType {
+    NSArray <NSNumber *> *categories = %orig;
+    if (groupType == 1) {
+        NSMutableArray *mutableCategories = categories.mutableCopy;
+        if (![mutableCategories containsObject:@(YouTubePlusSection)]) {
+            NSUInteger insertIndex = [mutableCategories indexOfObject:@(1)];
+            if (insertIndex != NSNotFound)
+                [mutableCategories insertObject:@(YouTubePlusSection) atIndex:insertIndex + 1];
+            else
+                [mutableCategories insertObject:@(YouTubePlusSection) atIndex:0];
+        }
+        return mutableCategories.copy;
+    }
+    return categories;
+}
+%end
+
 %hook YTSettingsSectionController
 - (void)setSelectedItem:(NSUInteger)selectedItem {
     if (selectedItem != NSNotFound) %orig;
@@ -45,13 +91,13 @@ static NSString *GetCacheSize() {
 - (void)layoutSubviews {
     %orig;
 
-    BOOL isYouTubePlus = [self.accessibilityIdentifier isEqualToString:@"YouTubePlusSectionItem"];
-    YTTouchFeedbackController *feedback = [self valueForKey:@"_touchFeedbackController"];
-    ABCSwitch *abcSwitch = [self valueForKey:@"_switch"];
-
-    if (isYouTubePlus) {
-        feedback.feedbackColor = [UIColor colorWithRed:0.75 green:0.50 blue:0.90 alpha:1.0];
-        abcSwitch.onTintColor = [UIColor colorWithRed:0.75 green:0.50 blue:0.90 alpha:1.0];
+    if ([self.accessibilityIdentifier isEqualToString:@"YouTubePlusSectionItem"]) {
+        @try {
+            YTTouchFeedbackController *feedback = [self valueForKey:@"_touchFeedbackController"];
+            ABCSwitch *abcSwitch = [self valueForKey:@"_switch"];
+            feedback.feedbackColor = [UIColor colorWithRed:0.75 green:0.50 blue:0.90 alpha:1.0];
+            abcSwitch.onTintColor = [UIColor colorWithRed:0.75 green:0.50 blue:0.90 alpha:1.0];
+        } @catch (NSException *e) {}
     }
 }
 %end
@@ -113,7 +159,13 @@ static NSString *GetCacheSize() {
 - (void)updateYouTubePlusSectionWithEntry:(id)entry {
     NSMutableArray *sectionItems = [NSMutableArray array];
     Class YTSettingsSectionItemClass = %c(YTSettingsSectionItem);
-    YTSettingsViewController *settingsViewController = [self valueForKey:@"_settingsViewControllerDelegate"];
+    YTSettingsViewController *settingsViewController = nil;
+    @try {
+        settingsViewController = [self valueForKey:@"_settingsViewControllerDelegate"];
+    } @catch (NSException *e) {}
+    if (!settingsViewController && [[self parentResponder] isKindOfClass:%c(YTSettingsViewController)]) {
+        settingsViewController = (YTSettingsViewController *)[self parentResponder];
+    }
 
     YTSettingsSectionItem *space = [%c(YTSettingsSectionItem) itemWithTitle:nil accessibilityIdentifier:@"YouTubePlusSectionItem" detailTextBlock:nil selectBlock:nil];
 
@@ -536,8 +588,13 @@ static NSString *GetCacheSize() {
     [sectionItems addObject:version];
 
     BOOL isNew = [settingsViewController respondsToSelector:@selector(setSectionItems:forCategory:title:icon:titleDescription:headerHidden:)];
-    isNew ? [settingsViewController setSectionItems:sectionItems forCategory:YouTubePlusSection title:@"YouTube Plus" icon:nil titleDescription:nil headerHidden:NO]
-          : [settingsViewController setSectionItems:sectionItems forCategory:YouTubePlusSection title:@"YouTube Plus" titleDescription:nil headerHidden:NO];
+    if (isNew) {
+        YTIIcon *icon = [%c(YTIIcon) new];
+        icon.iconType = (YTIcon)44;
+        [settingsViewController setSectionItems:sectionItems forCategory:YouTubePlusSection title:@"YouTube Plus" icon:icon titleDescription:nil headerHidden:NO];
+    } else {
+        [settingsViewController setSectionItems:sectionItems forCategory:YouTubePlusSection title:@"YouTube Plus" titleDescription:nil headerHidden:NO];
+    }
 
 }
 
