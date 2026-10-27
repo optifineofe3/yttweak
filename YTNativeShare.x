@@ -4,16 +4,14 @@
 #import "YTHeader/GPBMessage.h"
 #import "YTHeader/GPBUnknownField.h"
 #import "YTHeader/GPBUnknownFieldSet.h"
-
-@interface YTICommand : GPBMessage
-@end
+#import "YTHeader/ELMPBShowActionSheetCommand.h"
 
 @interface ELMPBCommand : GPBMessage
 @end
 
-@interface ELMPBShowActionSheetCommand : GPBMessage
-@property (nonatomic, strong, readwrite) ELMPBCommand *onAppear;
-@property (nonatomic, assign, readwrite) BOOL hasOnAppear;
+@interface GPBUnknownFieldSet (NativeShare)
+- (BOOL)hasField:(int32_t)number;
+- (GPBUnknownField *)getField:(int32_t)number;
 @end
 
 @interface YTIUpdateShareSheetCommand : GPBMessage
@@ -26,14 +24,14 @@
 + (GPBExtensionDescriptor*)innertubeCommand;
 @end
 
-typedef NS_ENUM(NSInteger, ShareEntityType) {
+typedef NS_ENUM(int32_t, ShareEntityType) {
     ShareEntityFieldVideo = 1,
     ShareEntityFieldPlaylist = 2,
     ShareEntityFieldChannel = 3,
     ShareEntityFieldClip = 8
 };
 
-static inline NSString* extractIdWithFormat(GPBUnknownFieldSet *fields, NSInteger fieldNumber, NSString *format) {
+static inline NSString* extractIdWithFormat(GPBUnknownFieldSet *fields, int32_t fieldNumber, NSString *format) {
     if (![fields hasField:fieldNumber])
         return nil;
     GPBUnknownField *idField = [fields getField:fieldNumber];
